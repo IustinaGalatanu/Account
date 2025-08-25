@@ -12,10 +12,16 @@ import java.util.UUID;
 @Service
 public class AccountService {
     private final Map<UUID, Account> users = new HashMap<>();
+    private final EmailService emailService;
+
+    public AccountService(EmailService emailService) {
+        this.emailService = emailService;
+    }
 
     public Account createAccount(String firstName, String lastName, String email) {
         Account user = new Account(UUID.randomUUID(), firstName, lastName, email, LocalDateTime.now());
         users.put(user.getId(), user);
+        emailService.sendWelcomeEmail(user);
         return user;
     }
 
